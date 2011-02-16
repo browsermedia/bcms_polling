@@ -1,0 +1,12 @@
+<ul class="vote-results">
+<% for response in @poll.responses %>
+  <li>
+    <strong><%= response.answer %></strong> &mdash; <%= response_results(response) %>
+  </li>
+<% end %>
+</ul>
+<% if cookies[cookie_for(@poll)] -%>
+    <%= link_to "Reset Poll", poll_reset_path(@poll)  %>
+<% else %>
+    <%= link_to_function "Back to Poll", 'history.go(0);return false;' %>
+<% end %>

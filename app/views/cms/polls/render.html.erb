@@ -1,0 +1,116 @@
+<% unless self.controller.instance_variable_defined? :@include_js_http_methods -%>
+    <%= javascript_include_tag 'jquery' %>
+    <%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? -%>
+
+    <style>
+        ul.vote-choices, ul.vote-results {
+            margin: 10px 0 !important;
+            padding: 0 !important;
+        }
+
+        ul.vote-choices li, ul.vote-results li {
+            background: none !important;
+            padding: 5px 0 !important;
+        }
+
+        a.vote-this, a.show-results {
+            display: inline;
+            text-align: center;
+            text-transform: uppercase;
+            background: #A2BC39;
+            color: #FFF;
+            font-size: 90%;
+            margin: 10px 0 !important;
+            padding: 2px 5px;
+            text-decoration: none;
+        }
+
+        a.vote-this {
+
+        }
+
+        a.show-results {
+            width: 60px;
+            right: 0;
+            font-weight: bold;
+        }
+
+    </style>
+
+    <script type="text/javascript">
+        function _ajax_request(url, data, callback, type, method) {
+            if (jQuery.isFunction(data)) {
+                callback = data;
+                data = {};
+            }
+
+            data = (data ? data + "&" : "") + "authenticity_token=" + encodeURIComponent(AUTH_TOKEN);
+
+            return jQuery.ajax({
+                type: method,
+                url: url,
+                data: data,
+                success: callback,
+                dataType: type
+            });
+        }
+
+        jQuery.extend({
+            put: function(url, data, callback, type) {
+                return _ajax_request(url, data, callback, type, 'PUT');
+            },
+            delete_: function(url, data, callback, type) {
+                return _ajax_request(url, data, callback, type, 'DELETE');
+            }
+        });
+    </script>
+    <% self.controller.instance_variable_set(:@include_js_http_methods, true) -%>
+
+    <script type="text/javascript">
+        function showResults(id) {
+            var pollUrl = '/polls/' + id + '/results';
+            $.get(pollUrl, function(data) {
+                $('div#vote-' + id + ' > ul').remove();
+                $('div#vote-' + id + '  > a').remove();
+                $('div#vote-' + id).append(data);
+            });
+        }
+
+        $(document).ready(function() {
+            $('a.vote-this').click(function(eventObject) {
+                $.put(eventObject.target);
+                showResults($(this).attr('data-poll-id'));
+                return false;
+            });
+
+            $('.show-results').click(function(eventObject) {
+                showResults($(this).attr('data-poll-id'));
+                return false;
+            });
+        });
+
+    </script>
+<% end -%>
+
+<strong><%= @content_block.question %></strong>
+
+<div id='vote-<%= @content_block.id %>'>
+  <ul class="vote-choices">
+    <% for response in PollResponse.find(:all, :conditions => {:poll_id => @content_block.id}) %>
+        <li>
+          <%= response.answer %>
+          <%= link_to "Vote!", poll_response_url(response), :class => "vote-this", 'data-poll-id'=>@content_block.id %>
+        </li>
+    <% end %>
+  </ul>
+  <%= link_to "See the results", "#", 'data-poll-id'=>@content_block.id, :class => "show-results" %>
+</div>
+<br/><br/>
+
+<% if cookies[cookie_for(@content_block)] -%>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            showResults(<%= @content_block.id %>)
+        });
+    </script>
+<% end -%>
