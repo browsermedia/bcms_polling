@@ -10,8 +10,8 @@ class PollTest < ActiveSupport::TestCase
   test "Should have responses" do
     p = Poll.create!(:question=>"What color?")
 
-    p.responses << PollResponse.create!(:answer=>"Red", :publish_on_save=>true)
-    p.responses << PollResponse.create!(:answer=>"Blue", :publish_on_save=>true)
+    p.responses << PollResponse.create!(:answer=>"Red")
+    p.responses << PollResponse.create!(:answer=>"Blue")
 
     found = Poll.find(p.id)
     assert_equal 2, p.responses.size
@@ -27,6 +27,14 @@ class PollTest < ActiveSupport::TestCase
     found = Poll.find(p.id)
     found = found.as_of_draft_version
     assert_equal 2, p.responses.size
+
+  end
+
+  test "Binding responses as nested attributes for new object" do
+    poll = Poll.create!(:question=>"Are you different?")
+    poll.update_attributes({ :responses_attributes=>{"0"=>{"answer"=>"Answer 1"}}})
+    assert_equal 1, poll.responses.size
+    assert_equal 1, PollResponse.count
 
   end
 

@@ -1,15 +1,20 @@
 <script type="text/javascript">
-    var pollResponseContent = '<div class="response"><%= escape_javascript(f.cms_text_field :responses) %></div>';
+
+    var new_response = '<div class="fields text_fields">\n';
+    new_response += '<label for="poll_responses">Response #X</label>\n';
+    new_response += '<input type="text" value="" tabindex="5" size="30" name="" id="poll_responses">\n';
+    new_response += '</div>';
 
     function addResponse() {
         var responseCount = $('div#responses > div').length;
-        $('div#responses').append(pollResponseContent);
+        $('div#responses').append(new_response);
         $('div.fields.text_fields > label[for="poll_responses"]:last').text('Response #' + (responseCount + 1));
         $('div.fields.text_fields > input#poll_responses:last').attr('name', 'poll[responses_attributes][' + responseCount + '][answer]');
     }
 
     $(document).ready(function() {
-        if (<%= @block.new_record? %>) {
+        var new_record = <%= @block.new_record? %>;
+        if (new_record) {
             addResponse();
             addResponse();
         }
@@ -34,19 +39,15 @@
 </style>
 
 <%= f.cms_text_field :question %>
+
+
 <div id="responses">
   <% count = 0 -%>
-  <% for response in PollResponse.find(:all, :conditions => {:poll_id => f.object.id}) %>
-      <div class="response">
-        <%= hidden_field_tag "poll[responses_attributes][#{count}][id]", response.id %>
-        <%= f.cms_text_field :responses,
-                             :label => "Response ##{count + 1}",
-                             :name  => "poll[responses_attributes][#{count}][answer]",
-                             :value => response.answer %>
-        <%= link_to_function('Delete', '$(this).parent().remove()') %>
-      </div>
-      <% count += 1 -%>
+  <% available_responses = PollResponse.find(:all, :conditions => {:poll_id => f.object.id}) %>
+  <% f.fields_for(:responses, available_responses) do |response_fields| %>
+    <%= response_fields.cms_text_field :answer, :label => "Response ##{count = count + 1}" %>
   <% end %>
+
 </div>
 
 <div class="fields">

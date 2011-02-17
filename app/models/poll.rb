@@ -2,16 +2,9 @@ class Poll < ActiveRecord::Base
   acts_as_content_block
 
   has_many :responses, :class_name => "PollResponse"
+  accepts_nested_attributes_for :responses, :allow_destroy => true
 
   validates_presence_of :question
-
-  def initialize(attributes=nil)
-    super
-
-    self.build_responses unless self.responses
-  end
-
-  accepts_nested_attributes_for :responses, :allow_destroy => true
 
   def total_votes
     self.responses.inject(0) { |sum, r| sum += r.votes }
@@ -21,9 +14,24 @@ class Poll < ActiveRecord::Base
     question
   end
 
-  # Work around for getting responses attached to this poll. For some reason, calling @poll.responses in CMS
-  # views doesn't work.
-  def responses_for
-    PollResponse.find(:all, :conditions => { :poll_id => self.id})
+
+  # Overridden to make sure nested attributes (i.e. poll responses) will correctly update.
+  def update_attributes(attributes)
+    unless attributes[:responses_attributes].blank?
+      logger.debug "Forcing update of poll so updated answers are saved."
+      self.updated_at = Time.now  # Force this block to update, regardless of what was submitted.
+
+    else
+      logger.debug "No poll attributes were submitted."
+    end
+    super(attributes)
   end
+
+  # Overridden for purely debugging purposes.
+  def different_from_last_draft?
+    result = super
+    logger.debug "Is this poll is different than the last draft? '#{result}'"
+    result
+  end
+
 end

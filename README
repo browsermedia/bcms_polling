@@ -2,11 +2,15 @@ This is a polling module for BrowerCMS.
 
 Bugs:
 ====
-* Users cannot add additional questions, even though the UI appears to support it. Add Responses aren't saved.
 * Blank answers cause data to be lost.
 * Responses cannot be deleted either.
-* When a user votes, the page says 'Back to Poll'. Rather than 'Reset Poll'.
 
 Minor Issues
 =====
 * Tab order for responses is wrong.
+
+BrowserCMS Notes:
+================
+* Using nested_attributes doesn't work without some monkeying around. Specifically, BrowserCMS doesn't consider nested attributes as 'changes', so
+    updates (and a new version) doesn't get saved. Can fix this by timestamping 'updated_at' but the core CMS should be aware of
+    nested_attributes and save correctly if they are present.
