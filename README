@@ -2,7 +2,7 @@ This is a polling module for BrowerCMS.
 
 Bugs:
 ====
-* Users can vote as many times as they like (in the content library and when embedded into a page)
 * Users cannot add additional questions, even though the UI appears to support it. Add Responses aren't saved.
 * Blank answers cause data to be lost.
 * Responses cannot be deleted either.
+* Tab order for responses is wrong.

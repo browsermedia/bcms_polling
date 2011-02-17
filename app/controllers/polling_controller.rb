@@ -9,12 +9,12 @@ class PollingController < ApplicationController
     if !cookies[unique_key]
       @response.votes += 1
       @response.save!
-      @response.publish!
 
       cookies[unique_key] = {
           :value   => true,
           :expires => 1.year.from_now
       }
+      logger.warn "Saving cookie called '#{unique_key}'"
     else
       logger.warn "User attempted to submit another answer to the same poll."
     end
