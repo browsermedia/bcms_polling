@@ -19,6 +19,14 @@
             addResponse();
         }
     });
+
+    function removeResponse(element){
+        var delete_button = $(element);
+        delete_button.prev().hide();
+        delete_button.hide();
+        var delete_checkbox_class = '#poll_responses_attributes_'+ delete_button.attr('data-count-id') +'__destroy';
+        $(delete_checkbox_class).attr('checked', 'checked');
+    }
 </script>
 
 <style>
@@ -46,6 +54,9 @@
   <% available_responses = PollResponse.find(:all, :conditions => {:poll_id => f.object.id}) %>
   <% f.fields_for(:responses, available_responses) do |response_fields| %>
     <%= response_fields.cms_text_field :answer, :label => "Response ##{count = count + 1}" %>
+    <%= link_to_function('Delete', 'removeResponse(this)', 'data-count-id'=>count-1) %>
+    <%= response_fields.check_box :_destroy, :style=>"display:none" %>
+
   <% end %>
 
 </div>

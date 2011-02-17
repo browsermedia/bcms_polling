@@ -2,8 +2,6 @@ This is a polling module for BrowerCMS.
 
 Bugs:
 ====
-* Blank answers cause data to be lost.
-* Responses cannot be deleted either.
 
 Minor Issues
 =====
