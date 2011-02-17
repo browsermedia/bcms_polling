@@ -1,46 +1,52 @@
 <script type="text/javascript">
-var pollResponseContent = '<div class="response"><%= escape_javascript(f.cms_text_field :responses) %></div>';
+    var pollResponseContent = '<div class="response"><%= escape_javascript(f.cms_text_field :responses) %></div>';
 
-function addResponse() {
-  var responseCount = $('div#responses > div').length;
-  $('div#responses').append(pollResponseContent);
-  $('div.fields.text_fields > label[for="poll_responses"]:last').text('Response #' + (responseCount + 1));
-  $('div.fields.text_fields > input#poll_responses:last').attr('name', 'poll[responses_attributes][' + responseCount + '][answer]');
-}
+    function addResponse() {
+        var responseCount = $('div#responses > div').length;
+        $('div#responses').append(pollResponseContent);
+        $('div.fields.text_fields > label[for="poll_responses"]:last').text('Response #' + (responseCount + 1));
+        $('div.fields.text_fields > input#poll_responses:last').attr('name', 'poll[responses_attributes][' + responseCount + '][answer]');
+    }
+
+    $(document).ready(function() {
+        if (<%= @block.new_record? %>) {
+            addResponse();
+            addResponse();
+        }
+    });
 </script>
 
 <style>
-div.response {
-  position: relative;
-}
+    div.response {
+        position: relative;
+    }
 
-div.response a {
-  position: absolute;
-  top: 15px;
-  right: 170px;
-}
+    div.response a {
+        position: absolute;
+        top: 15px;
+        right: 170px;
+    }
 
-div.response > div.text_fields input {
-  width: 400px;
-  padding-bottom: 0px;
-}
+    div.response > div.text_fields input {
+        width: 400px;
+        padding-bottom: 0px;
+    }
 </style>
 
 <%= f.cms_text_field :question %>
-
 <div id="responses">
-<% count = 0 -%>
-<% for response in PollResponse.find(:all, :conditions => { :poll_id => f.object.id}) %>
-  <div class="response">
-  <%= hidden_field_tag "poll[responses_attributes][#{count}][id]", response.id %>
-  <%= f.cms_text_field :responses,
-                       :label => "Response ##{count + 1}",
-                       :name => "poll[responses_attributes][#{count}][answer]",
-                       :value => response.answer %>
-  <%= link_to_function('Delete', '$(this).parent().remove()') %>
-  </div>
-  <% count += 1 -%>
-<% end %>
+  <% count = 0 -%>
+  <% for response in PollResponse.find(:all, :conditions => {:poll_id => f.object.id}) %>
+      <div class="response">
+        <%= hidden_field_tag "poll[responses_attributes][#{count}][id]", response.id %>
+        <%= f.cms_text_field :responses,
+                             :label => "Response ##{count + 1}",
+                             :name  => "poll[responses_attributes][#{count}][answer]",
+                             :value => response.answer %>
+        <%= link_to_function('Delete', '$(this).parent().remove()') %>
+      </div>
+      <% count += 1 -%>
+  <% end %>
 </div>
 
 <div class="fields">

@@ -5,7 +5,7 @@ class CreatePolls < ActiveRecord::Migration
       t.text :question
     end
 
-    create_content_table :poll_responses do |t|
+    create_table :poll_responses do |t|
       t.text :answer
       t.integer :votes, :default => 0
       t.belongs_to :poll
@@ -18,7 +18,6 @@ class CreatePolls < ActiveRecord::Migration
     ContentType.delete_all(['name = ?', 'Poll'])
     CategoryType.all(:conditions => ['name = ?', 'Poll']).each(&:destroy)
     #If you aren't creating a versioned table, be sure to comment this out.
-    drop_table :poll_response_versions
     drop_table :poll_responses
     drop_table :poll_versions
     drop_table :polls

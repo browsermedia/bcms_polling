@@ -21,5 +21,9 @@ class Poll < ActiveRecord::Base
     question
   end
 
-
+  # Work around for getting responses attached to this poll. For some reason, calling @poll.responses in CMS
+  # views doesn't work.
+  def responses_for
+    PollResponse.find(:all, :conditions => { :poll_id => self.id})
+  end
 end
