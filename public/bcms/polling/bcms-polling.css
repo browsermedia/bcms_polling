@@ -1,0 +1,35 @@
+.bcms_poll .question {
+    font-weight: bold;
+}
+
+ul.vote-choices, ul.vote-results {
+    margin: 10px 0 !important;
+    padding: 0 !important;
+}
+
+ul.vote-choices li, ul.vote-results li {
+    background: none !important;
+    padding: 5px 0 !important;
+}
+
+a.vote-this, a.show-results {
+    display: inline;
+    text-align: center;
+    text-transform: uppercase;
+    background: #A2BC39;
+    color: #FFF;
+    font-size: 90%;
+    margin: 10px 0 !important;
+    padding: 2px 5px;
+    text-decoration: none;
+}
+
+a.vote-this {
+
+}
+
+a.show-results {
+    width: 60px;
+    right: 0;
+    font-weight: bold;
+}
