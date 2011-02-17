@@ -1,5 +1,20 @@
 This is a polling module for BrowerCMS.
 
+Installation:
+=============
+
+    gem install bcms_polling
+
+ Follow standard module installation after that.
+
+ Finally, edit your project's app/helpers/application_helper.rb so it looks like:
+
+    module ApplicationHelper
+        include Cms::PollsHelper
+    end
+
+
+
 Bugs:
 ====
 
