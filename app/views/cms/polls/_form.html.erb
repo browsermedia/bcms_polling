@@ -54,7 +54,7 @@
   <% available_responses = PollResponse.find(:all, :conditions => {:poll_id => f.object.id}) %>
   <% f.fields_for(:responses, available_responses) do |response_fields| %>
     <%= response_fields.cms_text_field :answer, :label => "Response ##{count = count + 1}" %>
-    <%= link_to_function('Delete', 'removeResponse(this)', 'data-count-id'=>count-1) %>
+    <%= link_to_function('Delete', 'removeResponse(this)', 'data-count-id'=>count-1, :style=>'position: relative; left: 465px; top: -25px;') %>
     <%= response_fields.check_box :_destroy, :style=>"display:none" %>
 
   <% end %>
