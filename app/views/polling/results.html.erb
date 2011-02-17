@@ -5,8 +5,9 @@
   </li>
 <% end %>
 </ul>
-<% if cookies[cookie_for(@poll)] -%>
-    <%= link_to "Reset Poll", poll_reset_path(@poll)  %>
-<% else %>
+<% if cookies[cookie_for(@poll)] && current_user.able_to?(:edit_content)-%>
+    <%= link_to "Vote Again (Reset Cookie)", poll_reset_path(@poll)  %>
+<% end %>
+<% if params[:return] == 'true' %>
     <%= link_to_function "Back to Poll", 'history.go(0);return false;' %>
 <% end %>

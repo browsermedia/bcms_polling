@@ -67,20 +67,20 @@
     <% self.controller.instance_variable_set(:@include_js_http_methods, true) -%>
 
     <script type="text/javascript">
-        function showResults(id) {
-            var pollUrl = '/polls/' + id + '/results';
+        function showResults(id, add_return_link) {
+            var pollUrl = '/polls/' + id + '/results?return=' + add_return_link;
             $('div#vote-' + id).load(pollUrl);
         }
 
         $(document).ready(function() {
             $('a.vote-this').click(function(eventObject) {
                 $.put(eventObject.target);
-                showResults($(this).attr('data-poll-id'));
+                showResults($(this).attr('data-poll-id'), false);
                 return false;
             });
 
             $('.show-results').click(function(eventObject) {
-                showResults($(this).attr('data-poll-id'));
+                showResults($(this).attr('data-poll-id'), true);
                 return false;
             });
 
@@ -107,7 +107,7 @@
 <% if cookies[cookie_for(@content_block)] -%>
     <script type="text/javascript">
         $(document).ready(function() {
-            showResults(<%= @content_block.id %>)
+            showResults(<%= @content_block.id %>, false);
         });
     </script>
 <% end -%>

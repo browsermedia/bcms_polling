@@ -1,6 +1,7 @@
 # Handles the public submissions of answers to poll questions.
 class PollingController < ApplicationController
   include Cms::PollsHelper
+  include Cms::Authentication::Controller
 
   def update
     @response  = PollResponse.find(params[:id])
