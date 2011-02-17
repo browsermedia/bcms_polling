@@ -69,11 +69,7 @@
     <script type="text/javascript">
         function showResults(id) {
             var pollUrl = '/polls/' + id + '/results';
-            $.get(pollUrl, function(data) {
-                $('div#vote-' + id + ' > ul').remove();
-                $('div#vote-' + id + '  > a').remove();
-                $('div#vote-' + id).append(data);
-            });
+            $('div#vote-' + id).load(pollUrl);
         }
 
         $(document).ready(function() {
@@ -87,6 +83,7 @@
                 showResults($(this).attr('data-poll-id'));
                 return false;
             });
+
         });
 
     </script>
