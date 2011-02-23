@@ -31,8 +31,10 @@ function showResults(id, add_return_link) {
 
 $(document).ready(function() {
     $('a.vote-this').click(function(eventObject) {
-        $.put(eventObject.target);
-        showResults($(this).attr('data-poll-id'), false);
+        var link = this;
+        $.put(eventObject.target, function(){
+            showResults($(link).attr('data-poll-id'), false);
+        });
         return false;
     });
 
