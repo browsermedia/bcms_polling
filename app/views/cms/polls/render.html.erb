@@ -1,5 +1,5 @@
 <% unless self.controller.instance_variable_defined? :@include_js_http_methods -%>
-    <%= javascript_include_tag 'jquery', '/bcms/polling/bcms-polling' %>
+    <%= javascript_include_tag 'jquery', '/bcms/polling/bcms-polling', 'jquery.cookie' %>
     <%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? -%>
     <% self.controller.instance_variable_set(:@include_js_http_methods, true) -%>
 <% end -%>
@@ -19,10 +19,11 @@
   <span class="show-results"><%= link_to "See the results", "#", 'data-poll-id'=>@content_block.id, :class => "show-results" %></span>
 </div>
 
-<% if cookies[cookie_for(@content_block)] -%>
-    <script type="text/javascript">
-        $(document).ready(function() {
+<script type="text/javascript">
+    $(document).ready(function() {
+        var cookie = '<%= cookie_for(@content_block) %>';
+        if($.cookie(cookie)){
             showResults(<%= @content_block.id %>, false);
-        });
-    </script>
-<% end -%>
+        }
+    });
+</script>
