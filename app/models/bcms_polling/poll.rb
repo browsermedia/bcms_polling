@@ -25,10 +25,12 @@ module BcmsPolling
     #
     # Both of these will require changes to the core CMS to fix.
     def ensure_responses_save
-      logger.warn "Force save responses #{responses}"    
-      
       responses.each do |r|
-        r.save if r.changed?
+        if r.changed?
+          r.save 
+        elsif r.marked_for_destruction?
+          responses.delete(r) 
+        end
       end
     end
 

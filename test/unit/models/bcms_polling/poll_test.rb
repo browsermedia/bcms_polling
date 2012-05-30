@@ -39,5 +39,14 @@ module BcmsPolling
 
     end
 
+    test "Delete a response" do
+      poll = Poll.create!(:question=>"Are you different?")
+      poll.update_attributes({ :responses_attributes=>{"0"=>{"answer"=>"Answer 1"}}})
+      
+      poll.update_attributes({ :responses_attributes=>{"0"=>{"id"=>PollResponse.first.id, "answer"=>"Answer 1", "_destroy" => "1"}}})
+
+      assert_equal 0, poll.responses.size
+
+    end
   end
 end
