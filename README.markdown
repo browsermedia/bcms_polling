@@ -21,21 +21,13 @@ vote multiple times from multiple computers or just clear their cookies to revot
 Installation:
 =============
 
-    gem install bcms_polling
+    $ rails g cms:install bcms_polling
 
  Follow standard module installation after that.
-
- Finally, edit your project's app/helpers/application_helper.rb so it looks like:
-
-    module ApplicationHelper
-        include Cms::PollsHelper
-    end
 
  Finally, add the default stylesheet for polls to your template, tweaking as necessary or inlining into the site's main stylesheet.
 
      <%= stylesheet_link_tag '/bcms/polling/bcms-polling' %>
-
-
 
 Bugs:
 ====
@@ -43,6 +35,10 @@ Bugs:
 
 BrowserCMS Core Notes:
 ================
-* Using nested_attributes doesn't work without some monkeying around. Specifically, BrowserCMS doesn't consider nested attributes as 'changes', so
-    updates (and a new version) doesn't get saved. Can fix this by timestamping 'updated_at' but the core CMS should be aware of
-    nested_attributes and save correctly if they are present.
+* Using nested_attributes doesn't work without some monkeying around. Specifically, BrowserCMS doesn't consider nested attributes as 'changes', so updates (and a new version) doesn't get saved. Can fix this by timestamping 'updated_at' but the core CMS should be aware of nested_attributes and save correctly if they are present.
+
+## To Do (3.5.x upgrade)
+
+* Cannot delete poll responses via the admin.
+* Verify install works
+

@@ -1,42 +1,40 @@
-# Add your own tasks in files placed in lib/tasks ending in .rake,
-# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
-
-require(File.join(File.dirname(__FILE__), 'config', 'boot'))
-
-require 'rake'
-require 'rake/testtask'
-require 'rake/rdoctask'
-
-require 'tasks/rails'
-
+#!/usr/bin/env rake
 begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gemspec|
-    gemspec.name = "bcms_polling"
-    gemspec.rubyforge_project = "browsercms"
-    gemspec.summary = "A Polling Module for BrowserCMS"
-    gemspec.email = "github@browsermedia.com"
-    gemspec.homepage = "http://browsercms.org"
-    gemspec.description = "Allows for user feedback via short polling questions."
-    gemspec.authors = ["BrowserMedia"]
-    gemspec.files = []
-    gemspec.files += Dir["app/**/*"]
-    gemspec.files -= Dir["app/views/layouts/templates/*"]
-    gemspec.files -= Dir["app/controllers/application_controller.rb"]
-    gemspec.files -= Dir["app/helpers/application_helper.rb"]
-    gemspec.files += Dir["doc/**/*"]
-    gemspec.files += Dir["db/migrate/[0-9]*.rb"].reject {|f| f =~ /_browsercms|_load_seed/ }
-    gemspec.files += Dir["lib/**/*"]
-    gemspec.files += Dir["rails/init.rb"]
-    gemspec.files += Dir["public/bcms/polling/**/*"]
-    gemspec.files += Dir["README.markdown"]
-    gemspec.files += Dir["Rakefile"]
-    gemspec.files += Dir["LICENSE.txt"]
-    gemspec.files += Dir["COPYRIGHT.txt"]
-    gemspec.files += Dir["VERSION"]
-  end
+  require 'bundler/setup'
 rescue LoadError
-  puts "Jeweler not available. Install it with: gem install jeweler"
+  puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
+end
+begin
+  require 'rdoc/task'
+rescue LoadError
+  require 'rdoc/rdoc'
+  require 'rake/rdoctask'
+  RDoc::Task = Rake::RDocTask
 end
 
-Jeweler::GemcutterTasks.new
+RDoc::Task.new(:rdoc) do |rdoc|
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title    = 'BcmsPolling'
+  rdoc.options << '--line-numbers'
+  rdoc.rdoc_files.include('README.rdoc')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
+APP_RAKEFILE = File.expand_path("../test/dummy/Rakefile", __FILE__)
+load 'rails/tasks/engine.rake'
+
+
+
+Bundler::GemHelper.install_tasks
+
+require 'rake/testtask'
+
+Rake::TestTask.new(:test => 'app:test:prepare') do |t|
+  t.libs << 'lib'
+  t.libs << 'test'
+  t.pattern = 'test/**/*_test.rb'
+  t.verbose = false
+end
+
+
+task :default => :test

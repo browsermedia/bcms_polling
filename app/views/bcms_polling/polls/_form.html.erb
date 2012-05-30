@@ -1,0 +1,67 @@
+<script type="text/javascript">
+
+    var new_response = '<div class="fields text_fields">\n';
+    new_response += '<label for="poll_responses">Response #X</label>\n';
+    new_response += '<input type="text" value="" tabindex="5" size="30" name="" id="poll_responses">\n';
+    new_response += '</div>';
+
+    function addResponse() {
+        var responseCount = $('div#responses > div').length;
+        $('div#responses').append(new_response);
+        $('div.fields.text_fields > label[for="poll_responses"]:last').text('Response #' + (responseCount + 1));
+        $('div.fields.text_fields > input#poll_responses:last').attr('name', 'poll[responses_attributes][' + responseCount + '][answer]');
+    }
+
+    $(document).ready(function() {
+        var new_record = <%= @block.new_record? %>;
+        if (new_record) {
+            addResponse();
+            addResponse();
+        }
+    });
+
+    function removeResponse(element){
+        var delete_button = $(element);
+        delete_button.prev().hide();
+        delete_button.hide();
+        var delete_checkbox_class = '#poll_responses_attributes_'+ delete_button.attr('data-count-id') +'__destroy';
+        $(delete_checkbox_class).attr('checked', 'checked');
+    }
+</script>
+
+<style>
+    div.response {
+        position: relative;
+    }
+
+    div.response a {
+        position: absolute;
+        top: 15px;
+        right: 170px;
+    }
+
+    div.response > div.text_fields input {
+        width: 400px;
+        padding-bottom: 0px;
+    }
+</style>
+
+<%= f.cms_text_field :question %>
+
+
+<div id="responses">
+  <% count = 0 -%>
+  <%= f.fields_for :responses do |response_fields| %>
+    <%= response_fields.cms_text_field :answer, :label => "Response ##{count = count + 1}" %>
+    <%= link_to_function('Delete', 'removeResponse(this)', 'data-count-id'=>count-1, :style=>'position: relative; left: 465px; top: -25px;') %>
+    <%= response_fields.check_box :_destroy, :style=>"display:none" %>
+
+  <% end %>
+
+</div>
+
+<div class="fields">
+  <label style="padding-left: 140px"></label>
+  <%= link_to_function('Add response', 'addResponse()') %>
+</div>
+
