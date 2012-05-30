@@ -27,7 +27,7 @@ Installation:
 
  Finally, add the default stylesheet for polls to your template, tweaking as necessary or inlining into the site's main stylesheet.
 
-     <%= stylesheet_link_tag '/bcms/polling/bcms-polling' %>
+     <%= stylesheet_link_tag 'bcms_polling/bcms-polling' %>
 
 Bugs:
 ====
