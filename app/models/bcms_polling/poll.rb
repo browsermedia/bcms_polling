@@ -18,6 +18,12 @@ module BcmsPolling
     end
 
     private
+    
+    # This is a work around for bugs in CMS 3.5.x where updates to nested_associations:
+    # 1. Do not count as 'changes' to the parent model (so they don't trigger a version save)
+    # 2. Associated blocks don't save and/or delete themselves like nested_attributes says they should.
+    #
+    # Both of these will require changes to the core CMS to fix.
     def ensure_responses_save
       logger.warn "Force save responses #{responses}"    
       

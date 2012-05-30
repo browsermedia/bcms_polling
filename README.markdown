@@ -22,12 +22,18 @@ Installation:
 =============
 
     $ rails g cms:install bcms_polling
+	$ rake db:install
 
  Follow standard module installation after that.
 
  Finally, add the default stylesheet for polls to your template, tweaking as necessary or inlining into the site's main stylesheet.
 
      <%= stylesheet_link_tag 'bcms_polling/bcms-polling' %>
+
+Update your config/application.rb with the following:
+
+	Rails.application.routes.default_url_options[:host] = config.cms.site_domain
+
 
 Bugs:
 ====
